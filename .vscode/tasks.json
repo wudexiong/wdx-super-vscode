@@ -1,0 +1,90 @@
+{   
+    // 任务示例
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // 任务的名称
+            "label": "git-fetch",
+            // 任务类别，shell代表脚本
+            "type": "shell",
+            // 任务脚本，可以是yarn/npm/git 等
+            "command": "git",
+            // 命令参数
+            "args": [
+              "fetch"
+            ],
+            // 声明无需扫描脚本输出
+            "problemMatcher": []
+        },
+        {
+            "label": "git-pull",
+            "type": "shell",
+            "command": "git",
+            "args": [
+              "pull",
+              "base",
+              "${input:branchName}", // 变量，会在下面的inputs中搜寻名叫branchName的id
+              "--rebase"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Git Pull",
+            "command": "git pull --rebase",
+            "type": "shell",
+        },
+        {
+            "label": "Yarn Install",
+            "command": "yarn install",
+            "type": "shell",
+        },
+        {
+            "label": "Run Development",
+            "command": "yarn start",
+            "type": "shell",
+        },
+        {
+            "label": "Init",
+            "runOptions": {
+                // 在文件夹打开时自动运行
+                "runOn": "folderOpen"
+            },
+            // 代表是依次执行，不设置会并行执行
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Yarn Install",
+                "Run Development"
+            ],
+        },
+        {
+            "label": "git-pull-push",
+            "type": "shell",
+            "dependsOn": [ // 依赖的任务
+                "git-pull",
+                "git-push"
+            ],
+            "dependsOrder": "sequence", // 代表是依次执行，不设置会并行执行
+            "problemMatcher": []
+          }
+    ],
+    "inputs": [
+        {
+            "id": "branch", // 输入参数的id，与上面变量${input:branch}这个branch保持一致
+            "type": "pickString",
+            "options": [
+              "dev",
+              "release"
+            ],
+            "description": "请输入分支"
+        },
+        {
+            "type": "promptString",
+            "id": "branchName",
+            "description": "input your branch name",
+            "default": "release"
+        }
+    ]
+}
